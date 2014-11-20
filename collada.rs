@@ -10,12 +10,13 @@ struct RawLink<T> {
     p: *mut T
 }
 
-struct XmlList<T> {
+pub struct XmlList<T> {
     head: NNode<T>,
     tail: PNode<T>,
+    length: uint,
 }
 
-struct Node<T> {
+pub struct Node<T> {
 	child: NNode<T>,
     prev: PNode<T>,
     next: NNode<T>,
@@ -51,7 +52,7 @@ fn link_pre<T>(mut new_node: Box<Node<T>>, prev: PNode<T>) -> NNode<T> {
 
 impl<T> XmlList<T> {
 	pub fn new() -> XmlList<T> {
-		XmlList{head: None, tail: RawLink::none()}
+		XmlList{head: None, tail: RawLink::none(), length: 0}
 	}
 
 	pub fn push_back_node(&mut self, mut new_tail: Box<Node<T>>) {
@@ -65,16 +66,67 @@ impl<T> XmlList<T> {
 			}
 		}
 	}
+
+	#[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn iter<'a>(&'a self) -> Items<'a, T> {
+        Items{nelem: self.len(), head: &self.head, tail: self.tail}
+    }
+
+    #[inline]
+    #[unstable = "matches collection reform specification, waiting for dust to settle"]
+    pub fn len(&self) -> uint {
+        self.length
+    }
+}
+
+pub struct Items<'a, T:'a> {
+    head: &'a NNode<T>,
+    tail: PNode<T>,
+    nelem: uint,
+}
+
+impl<'a, A> Iterator<&'a A> for Items<'a A>{
+	fn next(&mut self) -> Option<&'a A> {
+		if self.nelem == 0 {
+			return None;
+		}
+		self.head.as_ref().map(|head| {
+            self.nelem -= 1;
+            self.head = &head.next;
+            &head.value
+        })
+	}
 }
 
 #[test]
 fn test_insert() {
 	let mut dlist: XmlList<String> = XmlList::new();
 
-	for x in range(0u, 10000u) {
+	for _ in range(0u, 10000u) {
 		let node0: Box<Node<String>> = box Node::new("Lily Chen".to_string());
 		let node1: Box<Node<String>> = box Node::new("tracy ma".to_string());
 		dlist.push_back_node(node0);
 		dlist.push_back_node(node1);
+	}
+
+	for val in dlist.iter() {
+		println!("{}", val);
+	}
+
+}
+
+fn main() {
+	let mut dlist: XmlList<String> = XmlList::new();
+
+	for _ in range(0u, 10000u) {
+		let node0: Box<Node<String>> = box Node::new("Lily Chen".to_string());
+		let node1: Box<Node<String>> = box Node::new("tracy ma".to_string());
+		dlist.push_back_node(node0);
+		dlist.push_back_node(node1);
+	}
+
+	for it in dlist.iter() {
+		println!("{}", it);
 	}
 }
