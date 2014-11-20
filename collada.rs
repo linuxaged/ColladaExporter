@@ -62,6 +62,7 @@ impl<T> XmlList<T> {
 				self.head = Some(new_tail);
 			}
 			Some(tail) => {
+				self.tail = RawLink::some(&mut *new_tail);
 				tail.next = link_pre(new_tail, RawLink::some(tail));
 			}
 		}
@@ -92,6 +93,7 @@ pub struct Items<'a, T:'a> {
 }
 
 impl<'a, A> Iterator<&'a A> for Items<'a A>{
+	#[inline]
 	fn next(&mut self) -> Option<&'a A> {
 		if self.nelem == 0 {
 			return None;
