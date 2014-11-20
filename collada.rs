@@ -104,31 +104,15 @@ impl<'a, A> Iterator<&'a A> for Items<'a A>{
 	}
 }
 
-#[test]
-fn test_insert() {
-	let mut dlist: XmlList<String> = XmlList::new();
-
-	for _ in range(0u, 10000u) {
-		let node0: Box<Node<String>> = box Node::new("Lily Chen".to_string());
-		let node1: Box<Node<String>> = box Node::new("tracy ma".to_string());
-		dlist.push_back_node(node0);
-		dlist.push_back_node(node1);
-	}
-
-	for val in dlist.iter() {
-		println!("{}", val);
-	}
-
-}
-
 fn main() {
 	let mut dlist: XmlList<uint> = XmlList::new();
 
-	for i in range(0u, 100u) {
+	for i in range(0u, 10u) {
+		println!("add: {}",i);
 		dlist.push_back(i);
 	}
 
 	for it in dlist.iter() {
-		println!("{}", it);
+		println!("result: {}", it);
 	}
 }
