@@ -55,7 +55,7 @@ impl<T> XmlList<T> {
 		XmlList{head: None, tail: RawLink::none(), length: 0}
 	}
 
-	pub fn push_back_node(&mut self, mut new_tail: Box<Node<T>>) {
+	fn push_back_node(&mut self, mut new_tail: Box<Node<T>>) {
 		match self.tail.resolve() {
 			None => {
 				self.tail = RawLink::some(&mut *new_tail);
@@ -65,6 +65,11 @@ impl<T> XmlList<T> {
 				tail.next = link_pre(new_tail, RawLink::some(tail));
 			}
 		}
+		self.length += 1;
+	}
+
+	pub fn push_back(&mut self, elt: T) {
+		self.push_back_node(box Node::new(elt))
 	}
 
 	#[inline]
@@ -117,13 +122,10 @@ fn test_insert() {
 }
 
 fn main() {
-	let mut dlist: XmlList<String> = XmlList::new();
+	let mut dlist: XmlList<uint> = XmlList::new();
 
-	for _ in range(0u, 10000u) {
-		let node0: Box<Node<String>> = box Node::new("Lily Chen".to_string());
-		let node1: Box<Node<String>> = box Node::new("tracy ma".to_string());
-		dlist.push_back_node(node0);
-		dlist.push_back_node(node1);
+	for i in range(0u, 100u) {
+		dlist.push_back(i);
 	}
 
 	for it in dlist.iter() {
