@@ -3,6 +3,7 @@
 use std::mem;
 use std::ptr;
 use std::io::File;
+use std::slice::{Found, NotFound};
 
 type NNode<T> = Option<Box<Node<T>>>; // normal node
 type PNode<T> = RawLink<Node<T>>; // pointer node
@@ -107,19 +108,33 @@ impl<'a, A> Iterator<&'a A> for Items<'a A>{
 	}
 }
 
+// binary search for node
 fn parse(content: String) {
-	println!("parsing, {}",content.len());
+	let seek = "<library_geometries>";
+	let resultIndex = match content.as_slice().binary_search(|probe| probe.cmp(&seek)) {
+		Found(index) => index,
+		NotFound(err) => err,
+	};
+	println!("search , {}",resultIndex);
 	
 }
 
 fn main() {
-	let dae = match File::open(&Path::new("example.dae")).read_to_string() {
-		Ok(f) => f,
-		Err(e) => panic!("file error: {}", e),
-	};
+	// read line-by-line, parse library_* modules
+	let path = Path::new("chry.fa");
+    let mut file = BufferedReader::new(File::open(&path));
+    let v: Vec<&str> = four_lines.lines_any().collect();
+    for line in file.lines().filter_map(|result| result.ok()) {
+        line.trim_chars(' ');
+    }
 
 	parse(dae);
 
+	// string to float
+	// let num = match from_str::<f32>("3.14") {
+	// 	Some(f) => f,
+	// 	None => 0.0
+	// };
 
 	let mut dlist: XmlList<uint> = XmlList::new();
 
