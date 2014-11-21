@@ -2,6 +2,7 @@
 
 use std::mem;
 use std::ptr;
+use std::io::File;
 
 type NNode<T> = Option<Box<Node<T>>>; // normal node
 type PNode<T> = RawLink<Node<T>>; // pointer node
@@ -106,7 +107,20 @@ impl<'a, A> Iterator<&'a A> for Items<'a A>{
 	}
 }
 
+fn parse(content: String) {
+	println!("parsing, {}",content.len());
+	
+}
+
 fn main() {
+	let dae = match File::open(&Path::new("example.dae")).read_to_string() {
+		Ok(f) => f,
+		Err(e) => panic!("file error: {}", e),
+	};
+
+	parse(dae);
+
+
 	let mut dlist: XmlList<uint> = XmlList::new();
 
 	for i in range(0u, 10u) {
