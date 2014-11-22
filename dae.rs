@@ -2,7 +2,7 @@
 
 use std::mem;
 use std::ptr;
-use std::io::File;
+use std::io::{BufferedReader, File};
 use std::slice::{Found, NotFound};
 
 type NNode<T> = Option<Box<Node<T>>>; // normal node
@@ -109,32 +109,27 @@ impl<'a, A> Iterator<&'a A> for Items<'a A>{
 }
 
 // binary search for node
-fn parse(content: String) {
-	let seek = "<library_geometries>";
-	let resultIndex = match content.as_slice().binary_search(|probe| probe.cmp(&seek)) {
-		Found(index) => index,
-		NotFound(err) => err,
-	};
-	println!("search , {}",resultIndex);
-	
-}
+// fn parse(content: String) {
+// 	let seek = "<library_geometries>";
+// 	let resultIndex = match content.as_slice().binary_search(|probe| probe.cmp(&seek)) {
+// 		Found(index) => index,
+// 		NotFound(err) => err,
+// 	};
+// 	println!("search , {}",resultIndex);
+
+// }
 
 fn main() {
 	// read line-by-line, parse library_* modules
-	let path = Path::new("chry.fa");
-    let mut file = BufferedReader::new(File::open(&path));
-    let v: Vec<&str> = four_lines.lines_any().collect();
-    for line in file.lines().filter_map(|result| result.ok()) {
-        line.trim_chars(' ');
+	let path = Path::new("test.cs");
+    let mut v = Vec::new();
+    for line in BufferedReader::new(File::open(&path)).lines().filter_map(|result| result.ok()) {
+        v.push(line.trim_chars(' ').to_string());
     }
-
-	parse(dae);
-
-	// string to float
-	// let num = match from_str::<f32>("3.14") {
-	// 	Some(f) => f,
-	// 	None => 0.0
-	// };
+    for ln in v.iter() {
+        println!("{}",ln)
+    }
+    // println!("{}",v);
 
 	let mut dlist: XmlList<uint> = XmlList::new();
 
