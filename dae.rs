@@ -108,17 +108,6 @@ impl<'a, A> Iterator<&'a A> for Items<'a A>{
 	}
 }
 
-// binary search for node
-// fn parse(content: String) {
-// 	let seek = "<library_geometries>";
-// 	let resultIndex = match content.as_slice().binary_search(|probe| probe.cmp(&seek)) {
-// 		Found(index) => index,
-// 		NotFound(err) => err,
-// 	};
-// 	println!("search , {}",resultIndex);
-
-// }
-
 fn main() {
 	// read line-by-line, parse library_* modules
 	let path = Path::new("test.cs");
@@ -126,9 +115,17 @@ fn main() {
     for line in BufferedReader::new(File::open(&path)).lines().filter_map(|result| result.ok()) {
         v.push(line.trim_chars(' ').to_string());
     }
+
     for ln in v.iter() {
-        println!("{}",ln)
+        print!("{}",ln)
     }
+
+    let seek = "//\n";
+	let resultIndex = match v.as_slice().binary_search(|probe| probe.cmp(&seek.to_string())) {
+		Found(index) => println!("find: {}", index),
+		NotFound(err) => println!("not found: {}",err),
+	};
+    
     // println!("{}",v);
 
 	let mut dlist: XmlList<uint> = XmlList::new();
