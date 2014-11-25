@@ -110,17 +110,23 @@ impl<'a, A> Iterator<&'a A> for Items<'a A>{
 
 fn main() {
 	// read line-by-line, parse library_* modules
-	let path = Path::new("test.cs");
+	let path = Path::new("example/models/Badblue_fly.dae");
     let mut v = Vec::new();
     for line in BufferedReader::new(File::open(&path)).lines().filter_map(|result| result.ok()) {
-        v.push(line.trim_chars(' ').to_string());
+        v.push(line.trim().to_string());
     }
 
     for ln in v.iter() {
         print!("{}",ln)
     }
+    v.sort();
 
-    let seek = "//\n";
+    // for ln in v.iter() {
+    //     print!("{}",ln)
+    // }
+
+    let seek = "</extra>";
+    println!("{}",seek.to_string());
 	let resultIndex = match v.as_slice().binary_search(|probe| probe.cmp(&seek.to_string())) {
 		Found(index) => println!("find: {}", index),
 		NotFound(err) => println!("not found: {}",err),
