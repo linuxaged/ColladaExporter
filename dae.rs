@@ -108,6 +108,17 @@ impl<'a, A> Iterator<&'a A> for Items<'a A>{
 	}
 }
 
+fn find_tag(v: Vec<&str>, tag: &str) -> &[&str] {
+	let vs = v.as_slice();
+	let resultIndex = match vs.binary_search(|x| x.cmp(tag.to_string())) {
+		Found(index) => vs[index..v.len()].binary_search(|p| p.cmp("</library_geometries>".to_string())) {
+			Found(i) => vs[index..i],
+			NotFound(err) => println!("end not found: {}", err)
+		},
+		NotFound(err) => println!("not found: {}",err),
+	};
+}
+
 fn main() {
 	// read line-by-line, parse library_* modules
 	let path = Path::new("example/models/Badblue_fly.dae");
@@ -119,18 +130,14 @@ fn main() {
     for ln in v.iter() {
         print!("{}",ln)
     }
-    v.sort();
 
     // for ln in v.iter() {
     //     print!("{}",ln)
     // }
 
-    let seek = "</extra>";
-    println!("{}",seek.to_string());
-	let resultIndex = match v.as_slice().binary_search(|probe| probe.cmp(&seek.to_string())) {
-		Found(index) => println!("find: {}", index),
-		NotFound(err) => println!("not found: {}",err),
-	};
+    let seek = "<library_geometries>";
+
+    
     
     // println!("{}",v);
 
