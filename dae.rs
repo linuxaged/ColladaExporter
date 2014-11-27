@@ -5,6 +5,21 @@ use std::ptr;
 use std::io::{BufferedReader, File};
 use std::slice::{Found, NotFound};
 
+// 实现 boyer-moore 算法
+fn compare_last_char() {
+	if false {
+		if (!last_char_in_search()) {
+			move_whole_to_next();
+		}
+		else {
+
+		}
+	}
+	else {
+		compare_last_char()
+	}
+}
+
 type NNode<T> = Option<Box<Node<T>>>; // normal node
 type PNode<T> = RawLink<Node<T>>; // pointer node
 
@@ -108,6 +123,7 @@ impl<'a, A> Iterator<&'a A> for Items<'a A>{
 	}
 }
 
+// 先找出 library_*
 fn find_tag<'r>(v: &'r[String], tag: &str) -> Option<&'r[String]> {
     // let tag_begin = concat!("<" , tag , ">");
     // let tag_end = concat!("</" , tag , ">");
